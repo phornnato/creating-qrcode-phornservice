@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgasClU8wu_H4YCxdXcv8Cq7mELzs5iy9vKw&s">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+            text-align: center;
+        }
+
+        #qr-code {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>QR Code Generator</h1>
+        <input type="text" id="url-input" placeholder="Enter URL or text">
+        <button onclick="generateQRCode()">Generate QR Code</button>
+        <button onclick="saveQRCode()">Save QR Code</button>
+        <div id="qr-code"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        let qrCodeCanvas = null;
+
+        function generateQRCode() {
+            const url = document.getElementById('url-input').value.trim();
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = ''; // Clear previous QR code
+
+            if ( url === '') {
+                alert('Please enter both your name and URL or text.');
+                return;
+            }
+
+            const fullText = ` ${url}`;
+
+            QRCode.toCanvas(document.createElement('canvas'), fullText, { width: 300, color: { dark: '#0000ff', light: '#ffffff' } }, function (error, canvas) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                qrCodeCanvas = canvas; // Store the canvas globally for later use
+                qrCodeContainer.appendChild(canvas);
+            });
+        }
+
+        function saveQRCode() {
+            if (qrCodeCanvas) {
+                const link = document.createElement('a');
+                link.href = qrCodeCanvas.toDataURL('image/jpeg', 1.0); // Generate high-resolution JPEG
+                link.download = 'Phorn Sevice Qr.jpg'; // Set download file name
+                link.click();
+            } else {
+                alert('Please generate a QR code first.');
+            }
+        }
+    </script>
+</body>
+</html>
